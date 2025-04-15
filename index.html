@@ -19,12 +19,14 @@
             -ms-user-select: none;
             user-select: none;
             overflow: hidden;
+            position: relative;
         }
         .heart {
             font-size: 10rem;
-            color: #ff69b4;
+            color: #ff69b4; 
             cursor: pointer;
             transition: transform 0.3s ease;
+            z-index: 1;
         }
         .heart:hover {
             transform: scale(1.1);
@@ -35,7 +37,10 @@
             padding: 2rem;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.5s ease-in-out, wavyText 10s linear infinite;
+            z-index: 1;
+            position: relative;
+            overflow: hidden;
         }
         .hidden-div.show {
             display: block;
@@ -50,16 +55,21 @@
                 transform: translateY(0);
             }
         }
+        @keyframes wavyText {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         .psychedelic-overlay {
-            position: fixed;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             background: linear-gradient(270deg, #ff69b4, #ff1493, #ff69b4, #ff1493);
             background-size: 800% 800%;
-            animation: psychedelic 5s linear infinite;
-            z-index: 9999;
+            animation: psychedelic 5s linear;
+            z-index: 0;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -80,6 +90,23 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+        .wavy-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(270deg, #ff69b4, #ff1493, #ff69b4, #ff1493);
+            background-size: 800% 800%;
+            animation: wavy 10s linear infinite;
+            z-index: -1;
+            opacity: 0.5;
+        }
+        @keyframes wavy {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
         .content {
             opacity: 0;
             transition: opacity 1s ease-out;
@@ -90,6 +117,7 @@
     </style>
 </head>
 <body>
+    <div class="wavy-background"></div>
     <div class="psychedelic-overlay" id="psychedelicOverlay">
         <div class="fractal"></div>
     </div>
@@ -100,23 +128,27 @@
         </div>
     </div>
     <script>
-        window.addEventListener('load', function() {
-            const overlay = document.getElementById('psychedelicOverlay');
-            const content = document.getElementById('content');
-
-            setTimeout(() => {
-                overlay.style.opacity = '0';
-                content.classList.add('loaded');
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 1000); 
-            }, 2000); 
-        });
-
-        document.getElementById('heart').addEventListener('click', function() {
-            document.getElementById('hiddenDiv').classList.toggle('show');
-	    this.removeEventListener('click', arguments.callee);
-        });
+      var can_click = false;
+      
+      window.addEventListener('load', function() {
+          const overlay = document.getElementById('psychedelicOverlay');
+          const content = document.getElementById('content');
+	  
+          overlay.addEventListener('animationend', function() {
+              overlay.style.opacity = '0';
+              content.classList.add('loaded');
+              setTimeout(() => {
+                  overlay.style.display = 'none';
+                  can_click = true;
+                  document.getElementById('heart').addEventListener('click', function handler() {
+                      if (can_click) {
+                          document.getElementById('hiddenDiv').classList.add('show');
+                          this.removeEventListener('click', handler);
+                      }
+                  });
+              }, 1000); 
+          });
+      });
     </script>
 </body>
 </html>
