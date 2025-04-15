@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Some big heart</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffe6e6; /* Light warm pink background */
+            height: 100vh; /* Full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+	    -webkit-user-select: none; 
+	    -moz-user-select: none;
+	    -ms-user-select: none; 
+	    user-select: none; 
+        }
+        .heart {
+            font-size: 10rem;
+            color: #ff69b4; /* Hot pink heart */
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        .heart:hover {
+            transform: scale(1.1);
+        }
+        .hidden-div {
+            display: none;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .hidden-div.show {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="heart" id="heart">❤️</div>
+    <div class="hidden-div" id="hiddenDiv">
+        <p>Аня, как насчёт запустить совместный проект под кодовым названием 'Встречаться'? 😎</p>
+    </div>
+    <script>
+        document.getElementById('heart').addEventListener('click', function() {
+            document.getElementById('hiddenDiv').classList.toggle('show');
+        });
+    </script>
+</body>
+</html>
